@@ -1,0 +1,14 @@
+tailwid ui libraries to create components:
+HyperUI:fantastic
+daisyUI : less controle
+ripple ui:
+
+
+logos:
+https://logoipsum.com/
+
+
+
+
+
+https://medium.com/@azizbergach/mastering-next-js-14-a-comprehensive-tutorial-for-web-developers-507ff2e86c8b
