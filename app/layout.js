@@ -2,8 +2,10 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
+import { ClerkProvider } from '@clerk/nextjs'
 
-const inter = Roboto({ subsets: ["latin"] ,weight:'700'});
+
+const inter = Roboto({ subsets: ["latin"], weight: '700' });
 
 export const metadata = {
   title: "Create Next App",
@@ -12,12 +14,15 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-         <Header/>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={inter.className}>
+          <Header />
           {children}
-          <Footer/>   
-      </body>
-    </html>
+          <Footer />
+        </body>
+      </html>
+    </ClerkProvider>
+
   );
 }
