@@ -5,16 +5,17 @@ import { UserButton, useUser } from '@clerk/nextjs'
 import { ShoppingCart } from 'lucide-react'
 
 const Header = () => {
-  
   const { user } = useUser();
-  //return user && ( means if there is auser show header if know dont show
 
-  console.log('href',window.location.href) 
-  const [isLoggedIn,setIsloggedIn]=useState(false)
-  useEffect(()=>{
-    setIsloggedIn(window.location.href.toString().includes('sign-in'))
-  },[])
-  return !isLoggedIn && (
+  const [isSignInOrSignUp, setIsSignInOrSignUp] = useState(false);
+
+  useEffect(() => {
+    // Check if the current URL contains 'sign-in' or 'sign-up'
+    const currentPage = window.location.href.toString();
+    setIsSignInOrSignUp(currentPage.includes('sign-in') || currentPage.includes('sign-up'));
+  }, []); // Dependency array is empty, ensuring it only runs once after initial render
+
+  return !isSignInOrSignUp && (
     <header className="bg-white">
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8  shadow-md">
         <div className="flex h-16 items-center justify-between">
