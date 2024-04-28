@@ -1,23 +1,45 @@
 'use client'
 import { BadgeCheck, AlertOctagon, ShoppingCart } from 'lucide-react'
-import React from 'react'
+import React, { useContext } from 'react'
 import skeletonProductInfo from './skeletonProductInfo'
 import { useUser } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
+import CartApis from '@/app/_utils/CartApis'
+import { CartContext } from '@/app/_context/CartContext'
 
 const ProductInfo = ({ product }) => {
   const {user} =useUser()
   const router =useRouter()
-  const handleAddToCart=()=>{
-
-    if(!user){
-      router.push('/sign-in')
-    }else{
-      // add to cart logic
-
+  const {cart,setCart}=useContext(CartContext)
+  const handleAddToCart = () => {
+    if (!user) {
+      router.push('/sign-in');
+    } else {
+      // Add to cart logic
+      const data = {
+        data: {
+          username: user.fullName,
+          email: user.primaryEmailAddress.emailAddress,
+          products: [product?.id],
+        },
+      };
+  
+      CartApis.addToCart(data)
+        .then((res) => {
+          console.log('Cart created successfully',res.data.data);
+          setCart(oldCart=>[
+            ...oldCart,{
+              id:res?.data?.data?.id,
+              product
+            }
+          ])
+        })
+        .catch((error) => {
+          console.error('Error creating cart:', error);
+        }); // Use parentheses to capture the error
     }
-  }
-
+  };
+  
   return (
     <div>
       {product?.id?
