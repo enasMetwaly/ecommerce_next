@@ -3,17 +3,44 @@ import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { UserButton, useUser } from '@clerk/nextjs'
 import { ShoppingCart } from 'lucide-react'
+import { CartContext } from '../_context/CartContext';
+import { useContext } from 'react';
+import CartApis from '../_utils/CartApis';
 
 const Header = () => {
   const { user } = useUser();
 
   const [isSignInOrSignUp, setIsSignInOrSignUp] = useState(false);
+  const {cart,setCart}=useContext(CartContext)
 
   useEffect(() => {
     // Check if the current URL contains 'sign-in' or 'sign-up'
     const currentPage = window.location.href.toString();
     setIsSignInOrSignUp(currentPage.includes('sign-in') || currentPage.includes('sign-up'));
   }, []); // Dependency array is empty, ensuring it only runs once after initial render
+
+  useEffect(()=>{
+    //if user change it will fetch data cart items again
+    user&&getCartItems()
+
+  },[user])
+  const getCartItems=()=>{
+    CartApis.getUserCartItems(user.primaryEmailAddress.emailAddress)
+    .then(res=>{
+      console.log('response from user cart item',res?.data?.data)
+      res?.data?.data.forEach(cartItem => {
+        setCart((oldCart)=>[
+          ...oldCart,
+          {
+            id:cartItem?.id,
+            product:cartItem?.attributes?.prducts?.data[0]
+          }
+        ])
+        
+      });
+     
+    })
+  }
 
   return !isSignInOrSignUp && (
     <header className="bg-white">
@@ -79,7 +106,7 @@ const Header = () => {
             ) : (
               // If there's a user, show a Logout option
               <div className='flex items-center gap-5'>
-                <h2> <ShoppingCart className='flex gap-1 cursor-pointer'/>(0)      </h2>
+                <h2> <ShoppingCart className='flex gap-1 cursor-pointer'/>( {cart?.length})      </h2>
                 <UserButton afterSignOutUrl='/'/>
               </div>
             )}
