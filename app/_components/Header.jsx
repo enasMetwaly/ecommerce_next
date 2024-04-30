@@ -6,12 +6,14 @@ import { ShoppingCart } from 'lucide-react'
 import { CartContext } from '../_context/CartContext';
 import { useContext } from 'react';
 import CartApis from '../_utils/CartApis';
+import Cart from '../product-details/[productId]/_components/Cart';
 
 const Header = () => {
   const { user } = useUser();
 
   const [isSignInOrSignUp, setIsSignInOrSignUp] = useState(false);
   const {cart,setCart}=useContext(CartContext)
+  const [openCart,setOpenCart]=useState(false)
 
   useEffect(() => {
     // Check if the current URL contains 'sign-in' or 'sign-up'
@@ -19,28 +21,62 @@ const Header = () => {
     setIsSignInOrSignUp(currentPage.includes('sign-in') || currentPage.includes('sign-up'));
   }, []); // Dependency array is empty, ensuring it only runs once after initial render
 
-  useEffect(()=>{
-    //if user change it will fetch data cart items again
-    user&&getCartItems()
+  // useEffect(()=>{
+  //   //if user change it will fetch data cart items again
+  //   user&&getCartItems()
 
-  },[user])
-  const getCartItems=()=>{
-    CartApis.getUserCartItems(user.primaryEmailAddress.emailAddress)
-    .then(res=>{
-      console.log('response from user cart item',res?.data?.data)
-      res?.data?.data.forEach(cartItem => {
-        setCart((oldCart)=>[
-          ...oldCart,
-          {
-            id:cartItem?.id,
-            product:cartItem?.attributes?.prducts?.data[0]
-          }
-        ])
-        
-      });
+  // },[user])
+  //asli
+  // const getCartItems=()=>{
+  //   CartApis.getUserCartItems(user.primaryEmailAddress.emailAddress)
+  //   .then(res=>{
+  //     console.log('response from user cart item',res?.data?.data)
+  //     res?.data?.data.forEach(cartItem => {
+  //       setCart((oldCart)=>[
+  //         ...oldCart,
+  //         {
+  //           id:cartItem?.id,
+  //           product:cartItem?.attributes?.prducts?.data[0]
+  //         }
+  //       ])
+  //       console.log(cart)
+  //     });
      
-    })
-  }
+  //   })
+  // }
+  //black box
+  // const getCartItems = () => {
+  //   CartApis.getUserCartItems(user.primaryEmailAddress.emailAddress)
+  //     .then(res => {
+  //       console.log('response from user cart item', res?.data?.data)
+  //       const products = res?.data?.data.map(item => item.attributes.products.data);
+  //       const allProducts = [].concat(...products);
+  //       setCart(allProducts);
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching cart items:', error);
+  //     });
+  // }
+  //chat gpt:
+  useEffect(() => {
+    if (user && user.primaryEmailAddress) { // Ensure user and primaryEmailAddress are defined
+      CartApis.getUserCartItems(user.primaryEmailAddress.emailAddress)
+        .then((res) => {
+          const newCartItems = res?.data?.data?.map((item) => ({
+            id: item.id,
+            product: item.attributes.products.data[0], // Consistent mapping
+          }));
+  
+          setCart((prevCart) => [...prevCart, ...newCartItems]); // Properly update cart
+        })
+        .catch((error) => {
+          console.error("Error fetching cart items:", error);
+        });
+    } else {
+      console.warn("User or primaryEmailAddress is not defined."); // Handle undefined user
+    }
+  }, [user]); // Re-run effect when user changes
+  
 
   return !isSignInOrSignUp && (
     <header className="bg-white">
@@ -106,8 +142,12 @@ const Header = () => {
             ) : (
               // If there's a user, show a Logout option
               <div className='flex items-center gap-5'>
-                <h2> <ShoppingCart className='flex gap-1 cursor-pointer'/>( {cart?.length})      </h2>
+                <h2> 
+                <ShoppingCart className='flex gap-1 cursor-pointer'
+                onClick={()=>setOpenCart(!openCart)}/>
+                ( {cart?.length})      </h2>
                 <UserButton afterSignOutUrl='/'/>
+                {openCart&&<Cart />}
               </div>
             )}
 
