@@ -43,3 +43,19 @@ return_url: "https://localhost:3000/payment-confirm",
 
 it require https 
 solutionn:"http://localhost:3000/payment-confirm", 
+
+guide to stripe payment
+https://dashboard.stripe.com/test/dashboard
+https://dashboard.stripe.com/test/payments
+https://docs.stripe.com/payments/accept-a-payment-deferred
+https://docs.stripe.com/testing#cards
+
+
+right way to import api file:
+import OrderApis from '@/app/_utils/OrderApis';
+import CartApis from '@/app/_utils/CartApis';
+
+
+that way is wrong:
+import {OrderApis} from '@/app/_utils/OrderApis';
+import {CartApis} from '@/app/_utils/CartApis';
