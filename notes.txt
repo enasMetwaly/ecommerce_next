@@ -12,3 +12,34 @@ https://logoipsum.com/
 
 
 https://medium.com/@azizbergach/mastering-next-js-14-a-comprehensive-tutorial-for-web-developers-507ff2e86c8b
+https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/context/
+
+
+https://courses.codeawy.tech/courses/take/front-end-engineer-react-js-typescript/lessons/54254806-environment-setup
+https://courses.codeawy.tech/enrollments
+https://courses.codeawy.tech/enrollments
+
+
+//show cart component only if open cart is true
+                {openCart&&<Cart />}
+
+<button onClick={deleteCartItemFromList(item?.id)}>  // problem all items id  printed
+
+<button onClick={() => deleteCartItemFromList(item?.id)}>
+<button onClick={() => deleteCartItemFromList(item?.id)} className="text-gray-600 transition hover:text-red-600">
+  <span className="sr-only">Remove item</span>
+  {/* SVG icon */}
+</button>
+Why This Correction Works
+Lambda Function: By using a lambda function, you ensure the function isn't called immediately but only when the button is clicked.
+Avoiding Early Execution: Calling the function immediately triggers the console logs and possibly other side effects, causing the unexpected behavior.
+
+
+Use Lambda Functions for onClick: To avoid immediate execution, always use lambda functions for event handlers like onClick.
+
+The connection for this site is not securelocalhost sent an invalid response.
+ERR_SSL_PROTOCOL_ERROR:due to                     
+return_url: "https://localhost:3000/payment-confirm", 
+
+it require https 
+solutionn:"http://localhost:3000/payment-confirm", 
